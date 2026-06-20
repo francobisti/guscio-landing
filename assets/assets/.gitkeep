@@ -1,0 +1,71 @@
+index/guscio-landing
+│
+├── index.html
+├── style.css
+├── script.js
+│
+└── /assets
+      ├── /img
+      └── /icons
+.htmlbody {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #222;
+    background: #f7f7f7;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+    background: #e8f0ff;
+}
+
+button {
+    padding: 12px 24px;
+    background: #0044ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 60px 20px;
+}
+
+.feature {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.contact {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.cta {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: #0044ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+}
