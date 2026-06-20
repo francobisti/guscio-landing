@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GUSCIO — Mountain Beat Festival</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap');
+
+  :root {
+    --verde: #2D5016;
+    --ocra: #C4860A;
+    --crema: #F7F4EE;
+    --testo: #1A1A1A;
+    --grigio: #6B6B6B;
+    --bordo: #E2DDD4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--testo);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .header {
+    background: var(--verde);
+    padding: 20px 24px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .guscio-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 20px;
+    color: #fff;
+    letter-spacing: 0.08em;
+  }
+  .guscio-logo span { color: var(--ocra); }
+
+  .lang-switcher { display: flex; gap: 6px; }
+  .lang-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .lang-btn.active { background: var(--ocra); border-color: var(--ocra); }
+
+  .evento-nome {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: #fff;
+  }
+  .evento-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+
+  .ascolta-bar {
+    background: var(--ocra);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+  }
+  .play-icon {
+    width: 44px; height: 44px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ascolta-testo strong { display: block; color: #fff; font-size: 15px; font-weight: 600; }
+  .ascolta-testo span { color: rgba(255,255,255,0.85); font-size: 12px; }
+
+  .giorni-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    background: #fff;
+    border-bottom: 2px solid var(--bordo);
+    scrollbar-width: none;
+  }
+  .giorni-nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    padding: 12px 16px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--grigio);
+    border: none;
+    background: none;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+  }
+  .nav-btn.active { color: var(--verde); border-bottom-color: var(--verde); }
+
+  .contenuto { padding: 0 0 80px; }
+  .giorno { display: none; padding: 20px 20px; }
+  .giorno.attivo { display: block; }
+
+  .giorno-titolo {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--verde);
+    margin-bottom: 16px;
+  }
+
+  .evento-item {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--ocra);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .evento-item.gratuito { border-left-color: var(--verde); }
+  .evento-item.speciale { border-left-color: #B33A3A; background: #FFF8F5; }
+
+  .evento-ora {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ocra);
+    margin-bottom: 4px;
+  }
+  .evento-item.gratuito .evento-ora { color: var(--verde); }
+  .evento-item.speciale .evento-ora { color: #B33A3A; }
+
+  .evento-desc {
+    font-size: 14.5px;
+    color: var(--testo);
+    line-height: 1.5;
+  }
+
+  .evento-badge {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--grigio);
+    color: #fff;
+    margin-top: 6px;
+  }
+  .evento-item.gratuito .evento-badge { background: var(--verde); }
+
+  .footer-guscio {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--crema);
+    border-top: 1px solid var(--bordo);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--grigio);
+  }
+  .footer-guscio a { color: var(--verde); text-decoration: none; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="guscio-logo">GUSC<span>I</span>O</div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('it')">IT</button>
+      <button class="lang-btn" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <div class="evento-nome" id="evento-nome">Mountain Beat Festival</div>
+  <div class="evento-sub" id="evento-sub">20–28 giugno 2026 · Pinzolo · Vibrazioni ad alta e bassa frequenza</div>
+</div>
+
+<div class="ascolta-bar" onclick="ascolta()" id="ascolta-bar">
+  <div class="play-icon">
+    <svg width="16" height="18" viewBox="0 0 16 18" fill="none"><path d="M1 1L15 9L1 17V1Z" fill="#2D5016"/></svg>
+  </div>
+  <div class="ascolta-testo">
+    <strong id="ascolta-label">Ascolta il programma di oggi</strong>
+    <span id="ascolta-sub">Sintesi vocale · giorno selezionato</span>
+  </div>
+</div>
+
+<nav class="giorni-nav" id="giorni-nav">
+  <button class="nav-btn active" onclick="mostraGiorno('g20', this)">SAB 20</button>
+  <button class="nav-btn" onclick="mostraGiorno('g21', this)">DOM 21</button>
+  <button class="nav-btn" onclick="mostraGiorno('g22', this)">LUN 22</button>
+  <button class="nav-btn" onclick="mostraGiorno('g23', this)">MAR 23</button>
+  <button class="nav-btn" onclick="mostraGiorno('g24', this)">MER 24</button>
+  <button class="nav-btn" onclick="mostraGiorno('g25', this)">GIO 25</button>
+  <button class="nav-btn" onclick="mostraGiorno('g26', this)">VEN 26</button>
+  <button class="nav-btn" onclick="mostraGiorno('g27', this)">SAB 27</button>
+  <button class="nav-btn" onclick="mostraGiorno('g28', this)">DOM 28</button>
+</nav>
+
+<div class="contenuto">
+
+  <div class="giorno attivo" id="g20">
+    <div class="giorno-titolo">Sabato 20 giugno</div>
+    <div class="evento-item gratuito">
+      <div class="evento-ora">8:30</div>
+      <div class="evento-desc">Esperienza Segui il Battito</div>
+      <span class="evento-badge">su prenotazione</span>
+    </div>
+    <div class="evento-item gratuito">
+      <div class="evento-ora">9:00</div>
+      <div class="evento-desc">Apertura Infopoint in Piazza Carera e area relax al Parco Ciclamino</div>
+    </div>
+    <div class="evento-item speciale">
+      <div class="evento-ora">13:00</div>
+      <div class="evento-desc">Concerto al Doss con Ben Harper</div>
+    </div>
+    <div class="evento-item">
+      <div class="evento-ora">15:30–16:45</div>
+      <div class="evento-desc">Musica live con il Trio Anansi</div>
+    </div>
+    <div class="evento-item">
+      <div class="evento-ora">16:30–19:00</div>
+      <div class="evento-desc">Diretta Radio Deejay con Andrea & Michele in Piazza Carera</div>
+    </div>
+    <div class="evento-item">
+      <div class="evento-ora">18:00–22:00</div>
+      <div class="evento-desc">Musica nei Beat Bars del paese</div>
+    </div>
+  </div>
+
+  <div class="giorno" id="g21">
+    <div class="giorno-titolo">Domenica 21 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item gratuito"><div class="evento-ora">10:00–11:00</div><div class="evento-desc">Attività per bambini con Fondazione Caritro al Parco Ciclamino</div><span class="evento-badge">gratuito</span></div>
+    <div class="evento-item"><div class="evento-ora">16:30–19:00</div><div class="evento-desc">Diretta Radio Deejay con Andrea & Michele in Piazza Carera</div></div>
+    <div class="evento-item"><div class="evento-ora">18:00–22:00</div><div class="evento-desc">Drink the Beat, aperitivo itinerante tra i Beat Bars, musica e cocktail ispirati alla montagna</div></div>
+  </div>
+
+  <div class="giorno" id="g22">
+    <div class="giorno-titolo">Lunedì 22 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">18:30</div><div class="evento-desc">Cena in fienile a Spiazzo</div><span class="evento-badge">a pagamento, su prenotazione</span></div>
+  </div>
+
+  <div class="giorno" id="g23">
+    <div class="giorno-titolo">Martedì 23 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">11:00</div><div class="evento-desc">Esperienza Il sapore delle cose semplici al Parco Ciclamino</div><span class="evento-badge">a pagamento, su prenotazione</span></div>
+    <div class="evento-item"><div class="evento-ora">17:30–19:00</div><div class="evento-desc">Musica dal vivo con Alberto Turbofolk in Piazza Carera</div></div>
+  </div>
+
+  <div class="giorno" id="g24">
+    <div class="giorno-titolo">Mercoledì 24 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item gratuito"><div class="evento-ora">10:00–11:00</div><div class="evento-desc">Attività per bambini con Fondazione Caritro al Parco Ciclamino</div><span class="evento-badge">gratuito</span></div>
+    <div class="evento-item"><div class="evento-ora">17:30</div><div class="evento-desc">Esperienza Api — Le frequenze della Natura a Strembo</div><span class="evento-badge">su prenotazione</span></div>
+    <div class="evento-item"><div class="evento-ora">17:30–19:00</div><div class="evento-desc">Musica dal vivo con Fiamaz by Turbofolk in Piazza Carera</div></div>
+    <div class="evento-item speciale"><div class="evento-ora">21:00</div><div class="evento-desc">Cinema Impatto Zero: "Tony, Shelly e la luce magica" all'Antica Vetreria di Carisolo, in collaborazione con il Parco Naturale Adamello Brenta</div></div>
+  </div>
+
+  <div class="giorno" id="g25">
+    <div class="giorno-titolo">Giovedì 25 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">10:00</div><div class="evento-desc">Esperienza "Le cronache di Amia" all'Antica Vetreria di Carisolo</div><span class="evento-badge">su prenotazione</span></div>
+    <div class="evento-item speciale"><div class="evento-ora">21:00</div><div class="evento-desc">Concerto A Lume di Candela</div><span class="evento-badge">ingresso gratuito</span></div>
+  </div>
+
+  <div class="giorno" id="g26">
+    <div class="giorno-titolo">Venerdì 26 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">9:30</div><div class="evento-desc">Esperienza Il sentiero del Vetrocenacolo a Carisolo</div><span class="evento-badge">a pagamento, su prenotazione</span></div>
+    <div class="evento-item gratuito"><div class="evento-ora">15:00–16:00</div><div class="evento-desc">Attività per bambini con Fondazione Caritro al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">21:00</div><div class="evento-desc">Musica dal vivo con la band Voodoo Vibes in Piazza Carera</div></div>
+  </div>
+
+  <div class="giorno" id="g27">
+    <div class="giorno-titolo">Sabato 27 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item"><div class="evento-ora">10:30</div><div class="evento-desc">Esperienza "La storia del contadino di una volta", oggi a Caderzone Terme</div><span class="evento-badge">a pagamento, su prenotazione</span></div>
+    <div class="evento-item"><div class="evento-ora">16:30–19:00</div><div class="evento-desc">Diretta Radio Deejay con Andrea & Michele in Piazza Carera</div></div>
+    <div class="evento-item"><div class="evento-ora">18:00–21:00</div><div class="evento-desc">Musica nei Beat Bars del paese</div></div>
+    <div class="evento-item speciale"><div class="evento-ora">21:00</div><div class="evento-desc">Concerto al Doss con Elisa e Dardust</div><span class="evento-badge">a pagamento</span></div>
+  </div>
+
+  <div class="giorno" id="g28">
+    <div class="giorno-titolo">Domenica 28 giugno</div>
+    <div class="evento-item gratuito"><div class="evento-ora">8:30</div><div class="evento-desc">Esperienza Segui il Battito</div><span class="evento-badge">su prenotazione</span></div>
+    <div class="evento-item gratuito"><div class="evento-ora">9:00</div><div class="evento-desc">Apertura Infopoint e area relax al Parco Ciclamino</div></div>
+    <div class="evento-item speciale"><div class="evento-ora">12:30</div><div class="evento-desc">Concerto al Doss con Elisa e Dardust</div><span class="evento-badge">a pagamento</span></div>
+    <div class="evento-item"><div class="evento-ora">14:45–16:30</div><div class="evento-desc">Intrattenimento musicale con Noireve</div></div>
+    <div class="evento-item"><div class="evento-ora">18:30</div><div class="evento-desc">Chiusura impianto per la discesa a valle</div></div>
+    <div class="evento-item"><div class="evento-ora">16:30–19:00</div><div class="evento-desc">Diretta Radio Deejay con Andrea & Michele in Piazza Carera</div></div>
+  </div>
+
+</div>
+
+<div class="footer-guscio">
+  <span>Powered by <a href="#">GUSCIO</a> · guscio.ai</span>
+  <span>la sicurezza è un atto d'amore</span>
+</div>
+
+<script>
+  const giorniIds = ['g20','g21','g22','g23','g24','g25','g26','g27','g28'];
+  let lingua = 'it';
+
+  function mostraGiorno(id, btn) {
+    document.querySelectorAll('.giorno').forEach(g => g.classList.remove('attivo'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('attivo');
+    btn.classList.add('active');
+    window.speechSynthesis.cancel();
+  }
+
+  function setLang(l) {
+    lingua = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    const testi = {
+      it: { nome: "Mountain Beat Festival", sub: "20–28 giugno 2026 · Pinzolo · Vibrazioni ad alta e bassa frequenza", ascolta: "Ascolta il programma di oggi", sub2: "Sintesi vocale · giorno selezionato" },
+      de: { nome: "Mountain Beat Festival", sub: "20.–28. Juni 2026 · Pinzolo · Hohe und tiefe Frequenzen", ascolta: "Heutiges Programm anhören", sub2: "Sprachausgabe · ausgewählter Tag" },
+      en: { nome: "Mountain Beat Festival", sub: "June 20–28, 2026 · Pinzolo · High and low frequency vibrations", ascolta: "Listen to today's program", sub2: "Text to speech · selected day" }
+    };
+    const t = testi[l];
+    document.getElementById('evento-nome').textContent = t.nome;
+    document.getElementById('evento-sub').textContent = t.sub;
+    document.getElementById('ascolta-label').textContent = t.ascolta;
+    document.getElementById('ascolta-sub').textContent = t.sub2;
+  }
+
+  function ascolta() {
+    const giornoAttivo = document.querySelector('.giorno.attivo');
+    const testo = giornoAttivo.innerText;
+    const btn = document.getElementById('ascolta-bar');
+
+    if (window.currentAudio && !window.currentAudio.paused) {
+      window.currentAudio.pause();
+      return;
+    }
+
+    document.getElementById('ascolta-label').textContent = "Generazione voce...";
+
+    const voiceId = "RXoaSpLaWTEckJgPUBG3"; // Tiziana
+    const apiKey = "sk_f79f535b5c5055a35e8a8f2ab66bbe30ea782aeaa19f6b58";
+
+    fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+      method: "POST",
+      headers: {
+        "xi-api-key": apiKey,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        text: testo,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: { stability: 0.5, similarity_boost: 0.75 }
+      })
+    })
+    .then(res => res.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      window.currentAudio = audio;
+      document.getElementById('ascolta-label').textContent = "Ascolta il programma di oggi";
+      audio.play();
+    })
+    .catch(err => {
+      console.error("Errore ElevenLabs, uso voce di sistema:", err);
+      document.getElementById('ascolta-label').textContent = "Ascolta il programma di oggi";
+      const utterance = new SpeechSynthesisUtterance(testo);
+      utterance.lang = lingua === 'it' ? 'it-IT' : lingua === 'de' ? 'de-DE' : 'en-GB';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+</script>
+</body>
+</html>
